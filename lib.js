@@ -61476,7 +61476,7 @@ function hiddenRecordOpenDB() {
 			reject(new Error("IndexedDB unavailable"));
 			return;
 		}
-		var request = indexedDB.open("fpmHiddenRecordings", 1);
+		var request = indexedDB.open((window.STUDIO && window.STUDIO.hiddenRecordDb) || "studioHiddenRecordings", 1);
 		request.onupgradeneeded = function () {
 			var db = request.result;
 			if (!db.objectStoreNames.contains("chunks")) {
@@ -61589,7 +61589,7 @@ function hiddenRecordRead(prefix, onEntry, mode) {
 	});
 }
 
-// Guest-side upload status for the FULLPORTMATT chip / hold page (fpm-upload.js). Fired by the
+// Guest-side upload status for the studio chip / hold page (fpm-upload.js). Fired by the
 // Drive uploader's own progress and failure paths; a plain DOM event, nothing listens unless the
 // fork's &hiddenrecord guest UI is loaded.
 function hiddenRecordUploadStatus(state, uploaded, recorded, finalized) {
@@ -61650,7 +61650,7 @@ function hiddenRecordDownload(name) {
 
 // Called once at startup when &hiddenrecord is set. Console-only recovery; nothing is shown in the UI.
 function hiddenRecordCheckLeftovers() {
-	window.fpmRecoverRecordings = function (discardAfter) {
+	window.studioRecoverRecordings = window.fpmRecoverRecordings = function (discardAfter) {
 		return hiddenRecordList().then(function (list) {
 			if (!list.length) {
 				console.log("hiddenrecord: nothing to recover");
@@ -61670,7 +61670,7 @@ function hiddenRecordCheckLeftovers() {
 			});
 		});
 	};
-	window.fpmDiscardRecordings = function (name) {
+	window.studioDiscardRecordings = window.fpmDiscardRecordings = function (name) {
 		return hiddenRecordDiscard(name || null).then(function () {
 			console.log("hiddenrecord: discarded " + (name || "all recordings"));
 		});
@@ -61680,7 +61680,7 @@ function hiddenRecordCheckLeftovers() {
 			console.log("hiddenrecord: no leftover recordings");
 			return;
 		}
-		console.warn("hiddenrecord: " + list.length + " leftover recording(s) found. Run fpmRecoverRecordings() to download them or fpmDiscardRecordings() to delete them.");
+		console.warn("hiddenrecord: " + list.length + " leftover recording(s) found. Run studioRecoverRecordings() to download them or studioDiscardRecordings() to delete them.");
 		console.table(list);
 	}).catch(function (e) {
 		warnlog("hiddenrecord: could not check leftovers");

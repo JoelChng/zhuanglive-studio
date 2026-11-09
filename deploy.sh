@@ -1,12 +1,12 @@
 #!/bin/sh
-# FPM Studio deploy — the ONLY way to ship (SPEC I1/I2). One command:
+# Studio deploy — the ONLY way to ship (SPEC I1/I2). One command:
 #   1. refuses to run with uncommitted changes (stamp first via fpm-stamp.sh, then commit)
 #   2. pushes deploy AND main (GitHub Pages serves MAIN — pushing only deploy ships nothing)
 #   3. syncs the mini's local overlay copies (OBS legacy inputs read ~/obs-overlays/*.html;
 #      local files = robust if Pages is down, fork = single source of truth)
 #   4. refreshes the OBS overlay sources + hard-reloads the host tab (build-sync then stamps
 #      the Stage URL, forcing OBS's stage page onto the same build)
-# Pages CDN takes 1-10 min; verify with:  curl -s https://matt-leftcurve.github.io/studio/ | grep fpm-build
+# Pages CDN takes 1-10 min; verify with:  curl -s your GitHub Pages URL | grep fpm-build
 set -e
 cd "$(dirname "$0")"
 REPO="$(pwd)"
@@ -24,7 +24,7 @@ scp -q stage/retro-solo.html stage/retro-sbs.html stage/retro-trio.html stage/st
 
 cd "$HOME/.local/share/fpm-tools" && node --input-type=module -e "
 import OBSWebSocket from 'obs-websocket-js';
-const o=new OBSWebSocket();await o.connect('ws://100.116.51.32:4455','bender-mini-4k');
+const o=new OBSWebSocket();await o.connect(process.env.OBS_URL||'ws://127.0.0.1:4455', process.env.OBS_PASS||'');
 for(const n of ['Retro Overlay','Retro Solo Overlay','Retro SBS Overlay','Retro Trio Overlay','Live Ticker']){
   try{await o.call('PressInputPropertiesButton',{inputName:n,propertyName:'refreshnocache'});}catch(e){}
 }

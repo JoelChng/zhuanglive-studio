@@ -1,4 +1,4 @@
-/* FULLPORTMATT waiting room (&hold). Shown by fpm-hold.js while the guest is held;
+/* Studio waiting room (&hold). Shown by fpm-hold.js while the guest is held;
    replaces the stock "please wait until the director brings you in" modal. */
 
 body.fpm-holding #alertModal[data-modalid="123"],

@@ -1,4 +1,4 @@
-// FULLPORTMATT guest stage view v2 (2026-11-05, SPEC v2 "Onstage"). Guest pages (lowercase "fpm…"
+// Guest stage view v2 (SPEC v2 "Onstage"). Guest pages (lowercase "fpm…"
 // push IDs) and the host page (&stageview) draw the SAME stage as OBS via an embedded stage.html:
 // the host page broadcasts {fpmStage:{scene, layout, cast, sharer, music}} over VDO's generic data
 // channel. This file adds the LOCAL pieces on top: this person's own camera/share rendered with zero
@@ -102,7 +102,7 @@
 		if (params.get("icefilter")) qp.set("ice", params.get("icefilter"));
 		qp.set("dpr", params.get("viewdpr") || "1");
 		qp.set("self", me);
-		qp.set("room", params.get("room") || "fpmshow");
+		qp.set("room", params.get("room") || ((window.STUDIO||{}).room) || "zhuanglive");
 		if (!isHost) qp.set("mode", "view");
 		var hk = qp.toString();
 		if (hk !== hostStageKey) {

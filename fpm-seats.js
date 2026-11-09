@@ -1,4 +1,4 @@
-// FULLPORTMATT: onstage/backstage planner (v2, 2026-11-05 — SPEC v2 Onstage model; v1 two-seat
+// Studio: onstage/backstage planner (v2, 2026-11-05 — SPEC v2 Onstage model; v1 two-seat
 // planner replaced the same day). Pure functions, no DOM: fpm-scenes.js feeds the roster and applies
 // the result; runs under node for tests (tests/fpm-seats.test.mjs). Parse-safe (no ?. / ??).
 //

@@ -1,4 +1,4 @@
-// FULLPORTMATT guest control bar: five buttons, labels + state-aware tooltips.
+// Studio guest control bar: five buttons, labels + state-aware tooltips.
 // UI-only. Reads the existing button state (the `red` class set by toggleMute / toggleVideoMute,
 // the `green` class set by the screen-share code in lib.js) and writes data-fpm-* attributes that
 // fpm-guestbar.css renders. Buttons outside the five (chat, speaker, website, flip, files, ...)

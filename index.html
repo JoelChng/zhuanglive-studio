@@ -1,5 +1,6 @@
 <html lang='en'>
 	<head>
+<meta charset="utf-8" />
 		<meta name="fpm-build" content="11-06 15:00" />
 		<script type="text/javascript">
 			//  MS Internet Explorer must not be given a chance to fail before I can give the user an error message.
@@ -16,9 +17,10 @@
 			}
 		
 		</script>
+		<script type="text/javascript" src="./studio-config.js"></script>
 		<script>
-			// FULLPORTMATT: one invite link for every guest (NOTES.md section J).
-			// The truly param-less studio root (https://matt-leftcurve.github.io/studio/) is the guest entry:
+			// Studio: one invite link for every guest (NOTES.md section J).
+			// The truly param-less studio root (your GitHub Pages URL) is the guest entry:
 			// it opens the branded join flow for the show room, which generates a unique stream ID per join.
 			// Legacy "?g=1" / "?g=2" links (with or without messenger tracking params) land on the same flow.
 			// ANY other app parameter (director, push, view, scene, room, invite, preset, ...) in the query or
@@ -74,7 +76,7 @@
 					if (keys.length) {
 						return;
 					}
-					window.location.replace("./join.html?room=fpmshow" + (hold ? "&hold" : "") + (relay ? "&fpmrelay" : "") + "&t=" + Date.now()); // &t: never a cached join page
+					window.location.replace("./join.html?room=" + encodeURIComponent(((window.STUDIO||{}).room)||"zhuanglive") + (hold ? "&hold" : "") + (relay ? "&fpmrelay" : "") + "&t=" + Date.now()); // &t: never a cached join page
 				} catch (e) {
 					console.error(e);
 				}

@@ -2,10 +2,11 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
+		<script src="./studio-config.js"></script>
 		<meta name="fpm-build" content="11-06 15:00" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 		<meta name="robots" content="noindex" />
-		<title>Join the FULLPORTMATT Studio</title>
+		<title>Join the庄live Studio</title>
 		<link rel="icon" href="./media/favicon.ico" />
 		<style>
 			:root {
@@ -1010,13 +1011,49 @@
 					transition: none;
 				}
 			}
+
+			.consent {
+				margin-top: 8px;
+				padding: 14px 14px 12px;
+				border: 1px solid var(--line-strong);
+				border-radius: var(--radius);
+				background: rgba(201, 161, 95, 0.08);
+			}
+			.consent__title {
+				font-weight: 700;
+				color: var(--cream);
+				margin-bottom: 6px;
+				font-size: 15px;
+			}
+			.consent__text {
+				color: var(--muted);
+				font-size: 13px;
+				line-height: 1.45;
+				margin: 0 0 12px;
+			}
+			.consent__check {
+				display: flex;
+				gap: 10px;
+				align-items: flex-start;
+				cursor: pointer;
+				color: var(--cream);
+				font-size: 14px;
+				line-height: 1.35;
+			}
+			.consent__check input {
+				margin-top: 3px;
+				width: 18px;
+				height: 18px;
+				accent-color: var(--gold);
+				flex: 0 0 auto;
+			}
 		</style>
 	</head>
 	<body>
 		<header class="masthead">
 			<a class="wordmark" href="./join.html" onclick="return false;">
-				<span class="wordmark__name">FULLPORTMATT</span>
-				<span class="wordmark__sub">Studio</span>
+				<span class="wordmark__name" id="brandShowName">My Show</span>
+				<span class="wordmark__sub" id="brandStudioLabel">Studio</span>
 			</a>
 			<div class="masthead__right"><span class="dot"></span>Guest check-in</div>
 		</header>
@@ -1026,8 +1063,8 @@
 			<section id="landing" class="screen fade-in">
 				<div class="landing">
 					<span class="eyebrow">Guest entrance</span>
-					<h1>Welcome to the <em>FULLPORTMATT</em> Studio</h1>
-					<p class="lede">You're about to join <strong>Matt's show</strong>. Have a great time!</p>
+					<h1 id="landingTitle">Welcome to <em>My Show</em> Studio</h1>
+					<p class="lede" id="landingLede">You're about to join the show. Have a great time!</p>
 					<button id="continueBtn" class="btn btn--primary" type="button">Continue</button>
 					<p class="landing__fine">Next, your browser will ask for camera and microphone access.</p>
 					<div class="landing__alt">
@@ -1067,7 +1104,7 @@
 			<section id="badlink" class="screen hidden">
 				<div class="notice fade-in">
 					<h2>This invite link is incomplete</h2>
-					<p>It is missing the guest ID or room name. Ask Matt for a fresh link.</p>
+					<p>It is missing the guest ID or room name. Ask the host for a fresh link.</p>
 				</div>
 			</section>
 
@@ -1158,7 +1195,17 @@
 								<button id="hpYes" type="button" aria-pressed="false">Yes</button>
 								<button id="hpNo" type="button" aria-pressed="true">No</button>
 							</div>
-							<div id="hpHelp" class="help">No headphones? We'll turn on echo cancellation and noise suppression so Matt doesn't hear himself.</div>
+							<div id="hpHelp" class="help">No headphones? We'll turn on echo cancellation and noise suppression so the host doesn't hear themselves.</div>
+						</div>
+
+
+						<div id="consentBox" class="consent field">
+							<div class="consent__title" id="consentTitle">This session is recorded</div>
+							<p class="consent__text" id="consentText"></p>
+							<label class="consent__check">
+								<input id="consentCheck" type="checkbox" />
+								<span id="consentLabel">I understand this session may be recorded and published</span>
+							</label>
 						</div>
 
 						<div class="actions">
@@ -1170,7 +1217,7 @@
 			</section>
 		</main>
 
-		<footer>FULLPORTMATT &middot; powered by <a href="https://vdo.ninja" rel="noopener" target="_blank">VDO.Ninja</a></footer>
+		<footer><span id="footerShowName">My Show</span> &middot; <span id="footerCredit">powered by VDO.Ninja</span> · <a href="https://vdo.ninja" rel="noopener" target="_blank">VDO.Ninja</a> · <a href="https://github.com/steveseguin/vdo.ninja" rel="noopener" target="_blank">AGPL source</a></footer>
 
 		<script>
 			(function () {
@@ -1188,14 +1235,15 @@
 				// One invite link for everyone (NOTES.md section J): the bare studio URL lands here without an id
 				// and without a room. The room defaults to the show room; the stream ID is generated per join so two
 				// guests can never collide. An explicit ?id=…&room=… link keeps working as before.
-				var DEFAULT_ROOM = "fpmshow";
+				var S = window.STUDIO || {};
+				var DEFAULT_ROOM = (S.room || "zhuanglive").replace(/[\W]+/g, "_");
 				var generatedId = false;
 				if (!roomName) {
 					roomName = DEFAULT_ROOM;
 				}
 				function randomStreamId() {
 					var chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
-					var out = "fpm";
+					var out = "g";
 					var bytes = null;
 					try {
 						bytes = new Uint8Array(10);
@@ -1213,10 +1261,10 @@
 				// so a slot reserved for them on the director page (&slotmode) follows them. Different devices still get
 				// different IDs, so two guests can never collide.
 				if (!guestId) {
-					var STICKY_KEY = "fpm_guest_stream_id_" + roomName;
+					var STICKY_KEY = "studio_guest_stream_id_" + roomName;
 					try {
 						var saved = window.localStorage.getItem(STICKY_KEY);
-						if (saved && /^fpm[A-Za-z0-9]{10}$/.test(saved)) {
+						if (saved && /^g[A-Za-z0-9]{10}$/.test(saved)) {
 							guestId = saved;
 						}
 					} catch (e) {}
@@ -1237,6 +1285,34 @@
 				var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
 				// Screen sharing needs getDisplayMedia and the studio disables it on phones, so only desktops get the Share button.
 				var canShareScreen = !isMobile && !!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia);
+
+				// Apply studio-config branding + consent copy
+				(function applyBrand() {
+					var cfg = window.STUDIO || {};
+					var brand = cfg.brand || {};
+					try {
+						if (brand.primary) {
+							document.documentElement.style.setProperty("--gold", brand.primary);
+							document.documentElement.style.setProperty("--line", brand.primary.replace(")", ", 0.22)").replace("rgb", "rgba") );
+						}
+						if (brand.accent) document.documentElement.style.setProperty("--teal", brand.accent);
+						if (brand.bg) document.documentElement.style.setProperty("--ink", brand.bg);
+					} catch (e) {}
+					function setText(id, val) { var el = $(id); if (el && val != null) el.textContent = val; }
+					setText("brandShowName", cfg.showName || "the庄live");
+					setText("brandStudioLabel", cfg.studioLabel || "Studio");
+					setText("footerShowName", cfg.showName || "the庄live");
+					var lt = $("landingTitle");
+					if (lt) lt.innerHTML = "Welcome to <em>" + (cfg.showNameEm || cfg.showName || "the庄live").replace(/</g,"") + "</em> " + (cfg.studioLabel || "Studio");
+					setText("landingLede", cfg.welcomeLede || "You're about to join the show. Have a great time!");
+					document.title = "Join " + (cfg.showName || "the庄live") + " " + (cfg.studioLabel || "Studio");
+					var ct = $("consentTitle"); if (ct) ct.textContent = cfg.recordingConsentTitle || "This session is recorded";
+					var cx = $("consentText"); if (cx) cx.textContent = cfg.recordingConsentText || "";
+					var cl = $("consentLabel"); if (cl) cl.textContent = cfg.recordingConsentCheckbox || "I understand this session may be recorded and published";
+					var box = $("consentBox");
+					if (box && cfg.recordingConsentRequired === false) box.classList.add("hidden");
+				})();
+
 
 				// --- State -----------------------------------------------------------------
 				var stream = null; // live MediaStream shown in the preview
@@ -2003,13 +2079,22 @@
 					return $("nameInput").value.replace(/\s+/g, " ").trim();
 				}
 
+				function consentOk() {
+					var S2 = window.STUDIO || {};
+					if (S2.recordingConsentRequired === false) return true;
+					var box = $("consentBox");
+					if (box && box.classList.contains("hidden")) return true;
+					var c = $("consentCheck");
+					return !!(c && c.checked);
+				}
+
 				function updateJoinState() {
-					var ready = !!stream && stream.getAudioTracks().length > 0 && guestName().length > 0 && !!guestId && !!roomName;
+					var ready = !!stream && stream.getAudioTracks().length > 0 && guestName().length > 0 && !!guestId && !!roomName && consentOk();
 					$("joinBtn").disabled = !ready;
 				}
 
 				// Exposed so the constructed URL can be inspected from the console.
-				window.fpmBuildJoinURL = function () {
+				window.studioBuildJoinURL = window.fpmBuildJoinURL = function () {
 					var cam = selectedDevice($("cameraSelect"));
 					var mic = selectedDevice($("micSelect"));
 					var spk = selectedDevice($("speakerSelect"));
@@ -2047,7 +2132,7 @@
 					// In-room polish (see NOTES.md): 1080p capture, dark theme, no solo links.
 					parts.push("quality=0");
 					// Guests pull everyone else's video with a shared budget; the stock default is 500 kbps TOTAL, which makes
-					// Matt's 1080p camera arrive blurry. 6000 kbps total (split across visible feeds); WebRTC still backs off
+					// the host's 1080p camera arrive blurry. 6000 kbps total (split across visible feeds); WebRTC still backs off
 					// on weak connections. Override with &totalroombitrate=N on the invite.
 					// 2026-11-03: (9000 + &scale=100 tried, reverted: no visible gain, laptop dropped more.) screen shares get their own fixed 3000 on top (screensharebitrate,
 					// viewer side). NOT &noscale: that is SENDER-side (skips the low-bandwidth downscale) and looked blurrier; reverted.
@@ -2055,7 +2140,7 @@
 						parts.push("totalroombitrate=6000");
 					}
 					parts.push("screensharebitrate=3000");
-					// Phones: stock VDO caps a MOBILE guest's video to other room members (incl. Matt's host page and other
+					// Phones: stock VDO caps a MOBILE guest's video to other room members (incl. the host page and other
 					// guests) at 350 kbps / tiny resolution; only OBS scene views get full quality. Lift it (2026-11-03).
 					parts.push("nomobilebitratecap");
 					// Guests see everyone through the stage page (scene views, OBS quality; fpm-guestview.js), so their room
@@ -2139,6 +2224,7 @@
 				$("joinBtn").addEventListener("click", join);
 				$("toneBtn").addEventListener("click", playTestTone);
 				$("nameInput").addEventListener("input", updateJoinState);
+				if ($("consentCheck")) $("consentCheck").addEventListener("change", updateJoinState);
 				$("nameInput").addEventListener("keydown", function (e) {
 					if (e.key === "Enter") {
 						join();
@@ -2165,7 +2251,7 @@
 					headphones = false;
 					$("hpNo").setAttribute("aria-pressed", "true");
 					$("hpYes").setAttribute("aria-pressed", "false");
-					$("hpHelp").textContent = "No headphones? We'll turn on echo cancellation and noise suppression so Matt doesn't hear himself.";
+					$("hpHelp").textContent = "No headphones? We'll turn on echo cancellation and noise suppression so the host doesn't hear themselves.";
 				});
 				$("preview").addEventListener("loadedmetadata", updateResolutionChip);
 				$("preview").addEventListener("resize", updateResolutionChip); // fires when the camera changes size or rotates

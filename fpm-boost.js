@@ -1,4 +1,4 @@
-// FULLPORTMATT: headphone boost for the HOST page (&boost=N, e.g. 3 = +9.5 dB). Matt hears guests through this page
+// Studio: headphone boost for the HOST page (&boost=N, e.g. 3 = +9.5 dB). Matt hears guests through this page
 // (Mac output = RODECaster Chat channel, whose fader tops out and has no Mac-side volume). Each guest's room audio is
 // routed through Web Audio: gain N -> limiter -> speakers, and the stock element is silenced. Only Matt's ears
 // change: the Duo mix-minus keeps this off the stream and away from guests. Parse-safe (no ?. / ??).

@@ -1,4 +1,4 @@
-/* FULLPORTMATT guest control bar.
+/* Studio guest control bar.
    Only applies when fpm-guestbar.js adds `fpm-guest` to <body> (guest/push views;
    never director, scene or clean output). Restyles the existing #controlButtons
    markup; no DOM is added, labels and tooltips are pseudo-elements. */

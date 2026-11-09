@@ -1,3 +1,8 @@
+# NOTE
+
+Historical fork notes for the upstream FULLPORTMATT customization.
+For operating **the庄live** studio, use **SETUP.md** and **studio-config.js**.
+
 # FULLPORTMATT guest studio notes
 
 Fork-specific pieces, one section each:

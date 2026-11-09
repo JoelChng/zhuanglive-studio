@@ -46,21 +46,21 @@
 </style>
 </head>
 <body>
-  <img id="bg" src="bg-laoshi.png">
+  <img id="bg" src="bg-studio.png">
   <div id="vig"></div>
   <div id="wrap">
-    <img id="pic" src="matt-photo.jpg">
+    <img id="pic" src="../media/studio-host.svg">
     <div id="col">
       <div id="logo">马特老师</div>
-      <div id="tag">FULLPORTMATT</div>
+      <div id="tag">the庄live</div>
       <div id="tagline">行情 · 趋势 · 机会</div>
       <div id="soon">直播马上开始…</div>
     </div>
   </div>
-  <div id="social">𝕏 @fullportmatt&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;▶ youtube.com/@fullportmatt_zh</div>
+  <div id="social">𝕏 @thezhuanglive&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;▶ youtube.com/@thezhuanglive</div>
   <div id="scan"></div>
   <div id="sweep"></div>
-  <!-- REAL ticker (Matt, 2026-11-05): covers the decorative strip painted into bg-laoshi.png -->
+  <!-- REAL ticker (2026-11-05): covers the decorative strip painted into bg-studio.png -->
   <div id="rt"></div>
   <style>
     #rt{position:absolute;left:0;bottom:0;width:1920px;height:46px;background:rgba(7,14,20,0.94);
@@ -96,5 +96,29 @@
   function schedulePoll(ms){setTimeout(async function(){if(tickerVisible()){try{await poll();}catch(e){}}schedulePoll(pollDelay+Math.random()*3000);},ms);}
   render();schedulePoll(1000+Math.random()*8000);
   </script>
+<script src="../studio-config.js"></script>
+<script>
+(function(){
+  var S = window.STUDIO || {};
+  function setAll(sel, text){ document.querySelectorAll(sel).forEach(function(el){ el.textContent = text; }); }
+  if (S.showName) {
+    setAll('#tag, .show-name', S.showName);
+    document.querySelectorAll('[data-show-name]').forEach(function(el){ el.textContent = S.showName; });
+  }
+  var handle = S.hostHandle || '@thezhuanglive';
+  var yt = S.youtubeHandle || 'youtube.com/@thezhuanglive';
+  document.querySelectorAll('.handle').forEach(function(el, i){
+    var row = el.closest('.row');
+    var icon = row && row.querySelector('.icon');
+    if (icon && /yt/i.test(icon.className)) el.textContent = yt;
+    else if (el.textContent.indexOf('youtube') !== -1) el.textContent = yt;
+    else if (el.textContent.indexOf('@') === 0 || (icon && !/yt/i.test(icon.className))) el.textContent = handle;
+  });
+  var social = document.getElementById('social');
+  if (social) social.innerHTML = '𝕏 ' + handle + '&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;▶ ' + yt;
+  if (typeof HOST_HANDLE !== 'undefined') { try { HOST_HANDLE = handle; } catch(e){} }
+  window.HOST_HANDLE = handle;
+})();
+</script>
 </body>
 </html>

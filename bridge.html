@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<script src="./studio-config.js"></script>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="robots" content="noindex" />
-		<title>FULLPORTMATT · Screen-share → OBS bridge</title>
+		<title>Screen-share → OBS bridge</title>
 		<link rel="icon" href="./media/favicon.ico" />
 		<style>
 			:root {
@@ -269,7 +270,7 @@
 	</head>
 	<body>
 		<header>
-			<div class="wordmark"><span class="wordmark__name">FULLPORTMATT</span><span class="wordmark__sub">Studio</span></div>
+			<div class="wordmark"><span class="wordmark__name" id="bridgeShowName">My Show</span><span class="wordmark__sub" id="bridgeStudioLabel">Studio</span></div>
 			<div class="title">Screen-share → OBS bridge</div>
 		</header>
 
@@ -334,17 +335,25 @@
 
 				// ---- Config (URL params override the defaults) ---------------------------------------
 				var params = new URLSearchParams(location.search);
-				var ROOM = (params.get("room") || "fpmshow").replace(/[\W]+/g, "_");
-				var WATCH = (params.get("watch") || "G5EgnZp,G2FpmQx")
+				var S = window.STUDIO || {};
+				var obsCfg = S.obs || {};
+				try {
+					var bn = document.getElementById("bridgeShowName");
+					var bl = document.getElementById("bridgeStudioLabel");
+					if (bn) bn.textContent = S.showName || "the庄live";
+					if (bl) bl.textContent = S.studioLabel || "Studio";
+				} catch (e) {}
+				var ROOM = (params.get("room") || S.room || "zhuanglive").replace(/[\W]+/g, "_");
+				var WATCH = (params.get("watch") || S.bridgeWatchIds || "")
 					.split(",")
 					.map(function (s) {
 						return s.trim().replace(/:s$/, "").replace(/[\W]+/g, "_");
 					})
 					.filter(Boolean);
-				var OBS_URL = params.get("obs") || "ws://127.0.0.1:4455";
-				var OBS_PASS = params.get("pass") || ""; // REQUIRED for a password-protected OBS: pass &pass=... (never hardcode in this public file)
-				var SCENE_SHARE = params.get("sharescene") || "Guest - Share";
-				var SCENE_SBS = params.get("sbsscene") || "Guest - SBS";
+				var OBS_URL = params.get("obs") || obsCfg.url || "ws://127.0.0.1:4455";
+				var OBS_PASS = params.get("pass") || obsCfg.password || ""; // REQUIRED: pass &pass=... (never hardcode a password)
+				var SCENE_SHARE = params.get("sharescene") || obsCfg.shareScene || "Guest - Share";
+				var SCENE_SBS = params.get("sbsscene") || obsCfg.sbsScene || "Guest - SBS";
 				var DEBOUNCE_MS = parseInt(params.get("debounce") || "2000", 10) || 2000;
 				var SITE = params.get("site") || "./"; // where the VDO.Ninja app lives (same site by default)
 				var TEST = params.has("test"); // manual trigger buttons

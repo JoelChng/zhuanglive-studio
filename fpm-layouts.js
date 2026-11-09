@@ -1,4 +1,4 @@
-// FULLPORTMATT: single source of truth for stage geometry (2026-11-05, SPEC.md invariant I2).
+// Studio: single source of truth for stage geometry (2026-11-05, SPEC.md invariant I2).
 // Consumed by stage.html, fpm-guestview.js, fpm-scenes.js and stage/retro-share.html. Pure data +
 // pure functions, parse-safe (no ?. / ??), runs in browsers and under node for tests.
 // EDIT GEOMETRY HERE AND NOWHERE ELSE.

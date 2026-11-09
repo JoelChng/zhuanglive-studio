@@ -1,27 +1,29 @@
-// FULLPORTMATT host-page controller v2 (2026-11-05, SPEC v2 "Onstage"). On the HOST page only
+// Host-page controller v2 (SPEC v2 "Onstage"). On the HOST page only
 // (&obspass=<OBS websocket password> + &push). Owns ALL control-plane state:
 //   - scene buttons (Starting Soon / Onstage) + OBS websocket + intro mic-mute
 //   - the CAST: ordered onstage guests in the OBS "Stage" input URL (?cast=JSON [[id,name],...]);
 //     fpm-seats.js plans joins/blips/leaves; backstage strip + hover controls admit/demote
-//   - share as STATE, not a scene: host button (second stream FPMHOST:s) + guest announces reflow
+//   - share as STATE, not a scene: host button (second stream HOST:s / hostPushId:s) + guest announces reflow
 //     the stage everywhere via the broadcast; nothing switches scenes
-//   - the native camera transform in "Onstage" follows Matt's slot (fpm-layouts geometry)
+//   - the native camera transform in "Onstage" follows the host's slot (fpm-layouts geometry)
 //   - build-sync: stamps its own build into the Stage URL so OBS always runs matching code
 // Talks to local OBS (ws://127.0.0.1:4455 unless &obsurl=). Parse-safe (no ?. / ??).
 (function () {
 	"use strict";
 	var params = new URLSearchParams(window.location.search);
-	var PASS = params.get("obspass");
-	if (!PASS || !params.has("push")) return;
-	var URL_ = params.get("obsurl") || "ws://127.0.0.1:4455";
-	var ME = params.get("push") || "FPMHOST";
-	var DEFAULT_SCENES = ["Starting Soon", "Onstage"];
+	var S = window.STUDIO || {};
+	var obsCfg = S.obs || {};
+	var PASS = params.get("obspass") || obsCfg.password || "";
+	if (!PASS || !params.has("push")) return; // require &obspass= on the host URL (do not bake passwords into config for public hosts)
+	var URL_ = params.get("obsurl") || obsCfg.url || "ws://127.0.0.1:4455";
+	var ME = params.get("push") || S.hostPushId || "HOST";
+	var DEFAULT_SCENES = obsCfg.scenes || ["Starting Soon", "Onstage"];
 	var ONLY = params.get("scenes") === "all" ? null : params.get("scenes") ? params.get("scenes").split(",").map(function (s) { return s.trim(); }).filter(Boolean) : DEFAULT_SCENES;
-	var STAGE_INPUT = params.get("stageinput") || "Stage";
-	var ONSTAGE_SCENE = params.get("onstagescene") || "Onstage";
-	var CAM_SOURCE = params.get("camsource") || "Osmo Pocket 4";
-	var MIC = params.get("micinput") || "Mic/Aux";
-	var MUSIC_INPUT = params.get("musicinput") || "Intro Music";
+	var STAGE_INPUT = params.get("stageinput") || obsCfg.stageInput || "Stage";
+	var ONSTAGE_SCENE = params.get("onstagescene") || obsCfg.onstageScene || "Onstage";
+	var CAM_SOURCE = params.get("camsource") || obsCfg.camSource || "Camera";
+	var MIC = params.get("micinput") || obsCfg.micInput || "Mic/Aux";
+	var MUSIC_INPUT = params.get("musicinput") || obsCfg.musicInput || "Intro Music";
 
 	// ---------- toolbar ----------
 	var bar = document.createElement("div");
@@ -62,7 +64,7 @@
 	}
 
 	// ---------- share (a state, never a scene) ----------
-	var sharing = ""; // stream id of the active sharer ("FPMHOST" or an ONSTAGE fpm… id)
+	var sharing = ""; // stream id of the active sharer (hostPushId or an onstage guest id)
 	var shareAnnounce = {}; // guest id -> {on, ts}
 	(function hookShare() {
 		if (!window.session || typeof session.gotGenericData !== "function") return setTimeout(hookShare, 500);
@@ -139,7 +141,7 @@
 		camApply();
 	}
 
-	// ---------- native camera transform (Matt = slot 0) ----------
+	// ---------- native camera transform (host = slot 0) ----------
 	function camApply() {
 		if (!ws || ws.readyState !== 1 || !camItemId || !window.fpmLayouts) return;
 		var n = 1 + cast.length;
@@ -198,7 +200,7 @@
 			box.style.cssText = "position:relative;width:240px;height:168px;border-radius:10px;overflow:hidden;background:#0e1a2b;box-shadow:0 0 0 3px #5a606a,0 8px 24px rgba(0,0,0,.6)";
 			var f = document.createElement("iframe");
 			f.allow = "autoplay";
-			f.src = "./?view=" + encodeURIComponent(id) + "&scene&room=" + encodeURIComponent(params.get("room") || "fpmshow") + "&cover&noaudio&viewheight=360&videobitrate=500&label=Full_Port_Matt";
+			f.src = "./?view=" + encodeURIComponent(id) + "&scene&room=" + encodeURIComponent(params.get("room") || (S.room || "zhuanglive")) + "&cover&noaudio&viewheight=360&videobitrate=500&label=" + encodeURIComponent((S.hostTagLabel || "My_Show"));
 			f.style.cssText = "position:absolute;left:0;top:0;width:100%;height:135px;border:0;pointer-events:none";
 			box.appendChild(f);
 			var chip = document.createElement("div");

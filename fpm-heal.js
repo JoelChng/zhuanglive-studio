@@ -1,4 +1,4 @@
-// FULLPORTMATT: reconnect watchdog for room pages that VIEW guests without a fixed &view list
+// Studio: reconnect watchdog for room pages that VIEW guests without a fixed &view list
 // (director pages, and the studio host/program pushes FPM*).
 // Stock behaviour: when an incoming connection fails, the page closes it after 5 s and never asks again;
 // only pages with an explicit &view list retry (session.retryWatchInterval). The guest is still in the

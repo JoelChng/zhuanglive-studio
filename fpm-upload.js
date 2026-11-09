@@ -1,4 +1,4 @@
-// FULLPORTMATT upload status for &hiddenrecord guests.
+// Upload status for &hiddenrecord guests (branded via studio-config.js).
 // Policy: the recording file is invisible, the upload status is visible.
 //  - Small top-right chip (cloud + percent) while a hidden-record Drive upload is running;
 //    hover / tap expands it ("keep this tab open", rough time left). Completion shows a
@@ -189,9 +189,9 @@
 			pct.textContent = savedLocal ? "Saved to Downloads" : "Upload stopped";
 			title.textContent = savedLocal ? "Recording saved to your Downloads" : "Upload stopped";
 			text.textContent = savedLocal
-				? "The upload to the studio didn\u2019t finish, so your recording was saved to your Downloads folder (file ending in \u201c-backup\u201d). Please send that file to Matt."
+				? "The upload to the studio didn\u2019t finish, so your recording was saved to your Downloads folder (file ending in \u201c-backup\u201d). " + (((window.STUDIO||{}).uploadFailSendHint) || "Please send that file to the host.")
 				: "The upload to the studio stopped. Keep this tab open: when the show ends your recording will be saved to your Downloads folder.";
-			eta.textContent = savedLocal ? "Please send the file to Matt" : "Keep this tab open";
+			eta.textContent = savedLocal ? (((window.STUDIO||{}).uploadFailSendHint) || "Please send that file to the host.") : "Keep this tab open";
 			chip.querySelector(".fpm-upload__chip").setAttribute("aria-label", "Recording saved. The upload did not finish; we will recover it.");
 		}
 	}
@@ -203,8 +203,9 @@
 		hold.id = "fpmUploadHold";
 		hold.setAttribute("role", "status");
 		hold.setAttribute("aria-live", "polite");
+		var S = window.STUDIO || {};
 		hold.innerHTML =
-			'<div class="fpm-upload-hold__wordmark"><span class="fpm-upload-hold__name">FULLPORTMATT</span><span class="fpm-upload-hold__sub">Studio</span></div>' +
+			'<div class="fpm-upload-hold__wordmark"><span class="fpm-upload-hold__name">' + (S.showName || "the庄live").replace(/</g,"") + '</span><span class="fpm-upload-hold__sub">' + (S.studioLabel || "Studio").replace(/</g,"") + '</span></div>' +
 			'<svg class="fpm-upload-hold__icon" viewBox="0 0 24 24" aria-hidden="true" id="fpmUploadHoldIcon"></svg>' +
 			'<span class="fpm-upload-hold__eyebrow" id="fpmUploadHoldEyebrow"></span>' +
 			'<h1 class="fpm-upload-hold__title" id="fpmUploadHoldTitle"></h1>' +
@@ -254,7 +255,7 @@
 			eyebrow.textContent = "Recording saved";
 			title.innerHTML = "Your recording is in your <em>Downloads</em> folder";
 			lede.textContent = "The upload to the studio didn\u2019t finish, so we saved your recording to your computer (file ending in \u201c-backup\u201d). Thanks for coming on the show!";
-			fine.textContent = "Please send that file to Matt. Then you can close this tab.";
+			fine.textContent = (((window.STUDIO||{}).uploadFailSendHint) || "Please send that file to the host.") + " Then you can close this tab.";
 		}
 	}
 

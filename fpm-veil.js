@@ -1,4 +1,4 @@
-// FULLPORTMATT "Entering the studio…" veil.
+// "Entering the studio…" veil (branded via studio-config.js).
 // UI-only. Guests arrive from join.html with their devices already chosen (&webcam&autostart), so
 // the stock arming screen ("Waiting for Camera to Load" / "No Audio") only flashes on the way in.
 // This script covers the page from load until the guest is actually in the room (the control bar
@@ -34,12 +34,16 @@
 		veil.id = "fpmVeil";
 		veil.setAttribute("role", "status");
 		veil.setAttribute("aria-live", "polite");
+		var S = window.STUDIO || {};
 		veil.innerHTML =
-			'<div class="fpm-veil__wordmark"><span class="fpm-veil__name">FULLPORTMATT</span><span class="fpm-veil__sub">Studio</span></div>' +
+			'<div class="fpm-veil__wordmark"><span class="fpm-veil__name"></span><span class="fpm-veil__sub"></span></div>' +
 			'<div class="fpm-veil__orb" aria-hidden="true"><span class="fpm-veil__ring"></span><span class="fpm-veil__ring"></span><span class="fpm-veil__disc"></span></div>' +
 			'<span class="fpm-veil__eyebrow">Guest entrance</span>' +
-			'<h1 class="fpm-veil__title">Entering the <em>studio</em>…</h1>' +
+			'<h1 class="fpm-veil__title"></h1>' +
 			'<p class="fpm-veil__lede">Connecting your camera and microphone.</p>';
+		veil.querySelector(".fpm-veil__name").textContent = S.showName || "the庄live";
+		veil.querySelector(".fpm-veil__sub").textContent = S.studioLabel || "Studio";
+		veil.querySelector(".fpm-veil__title").innerHTML = S.veilTitle || "Entering the <em>studio</em>…";
 		document.body.appendChild(veil);
 		document.body.classList.add("fpm-veiling");
 	}

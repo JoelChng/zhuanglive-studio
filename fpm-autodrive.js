@@ -1,6 +1,6 @@
-// FULLPORTMATT: automatic guest Google Drive recording (director pages with &autodrive).
+// Automatic guest Google Drive recording (director pages with &autodrive).
 // - Each guest starts recording to Drive as soon as they join (green room included); late joiners on arrival.
-// - Skips studio-side pushes (any stream ID starting with uppercase FPM, e.g. FPMHOST, FPMPROG), screen shares, directors.
+// - Skips studio-side pushes (IDs starting with STUDIO.hostSkipPrefix / hostPushId), screen shares, directors.
 // - After a director reload it waits for guests' upload-progress messages first, so running recordings
 //   are recognised instead of double-started.
 // - With &obspass=<password>, it watches the local OBS websocket: when streaming STOPS it stops every guest
@@ -103,9 +103,9 @@
 			return false;
 		}
 		var sid = String(r.streamID);
-		// Studio-side feeds (FPMHOST camera, FPMPROG program, any future FPM* uppercase ID) are never guests.
-		// Guest IDs from join.html are lowercase "fpm..." so this test is case-sensitive on purpose.
-		if (sid.indexOf("FPM") === 0) {
+		// Studio-side feeds (host camera / program) are never guests. Prefix comes from studio-config.js.
+		var skipPrefix = ((window.STUDIO || {}).hostSkipPrefix) || ((window.STUDIO || {}).hostPushId) || "HOST";
+		if (skipPrefix && sid.indexOf(skipPrefix) === 0) {
 			return false;
 		}
 		if (sid.indexOf(":s") !== -1 || r.screenShareState || r.screenshare) {

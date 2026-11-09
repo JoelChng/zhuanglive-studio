@@ -1,4 +1,4 @@
-// FULLPORTMATT waiting room for &hold guests.
+// Waiting room for &hold guests (branded via studio-config.js).
 // UI-only. The stock app shows a "please wait until the director brings you in" modal
 // (warnUser(..., 123) from youreWaitingToBeActivated in lib.js) and removes it again when
 // the director activates the guest (closeModal(false, "123") in youveBeenActivated).
@@ -42,13 +42,20 @@
 		overlay.id = "fpmHold";
 		overlay.setAttribute("role", "status");
 		overlay.setAttribute("aria-live", "polite");
+		var S = window.STUDIO || {};
 		overlay.innerHTML =
-			'<div class="fpm-hold__wordmark"><span class="fpm-hold__name">FULLPORTMATT</span><span class="fpm-hold__sub">Studio</span></div>' +
+			'<div class="fpm-hold__wordmark"><span class="fpm-hold__name"></span><span class="fpm-hold__sub"></span></div>' +
 			'<div class="fpm-hold__orb" aria-hidden="true"><span class="fpm-hold__ring"></span><span class="fpm-hold__ring"></span><span class="fpm-hold__ring"></span><span class="fpm-hold__disc"></span></div>' +
-			'<span class="fpm-hold__eyebrow">Green room</span>' +
-			'<h1 class="fpm-hold__title">You\u2019re <em>all set</em></h1>' +
-			'<p class="fpm-hold__lede">Matt will bring you in shortly.</p>' +
-			'<p class="fpm-hold__fine">Your camera and microphone are connected. <strong>Nobody can see or hear you yet</strong> \u2014 you\u2019ll know the moment you\u2019re on.</p>';
+			'<span class="fpm-hold__eyebrow"></span>' +
+			'<h1 class="fpm-hold__title"></h1>' +
+			'<p class="fpm-hold__lede"></p>' +
+			'<p class="fpm-hold__fine"></p>';
+		overlay.querySelector(".fpm-hold__name").textContent = S.showName || "the庄live";
+		overlay.querySelector(".fpm-hold__sub").textContent = S.studioLabel || "Studio";
+		overlay.querySelector(".fpm-hold__eyebrow").textContent = S.holdEyebrow || "Green room";
+		overlay.querySelector(".fpm-hold__title").innerHTML = (S.holdTitle || "You're all set").replace(/all set/i, "<em>all set</em>");
+		overlay.querySelector(".fpm-hold__lede").textContent = S.holdLede || "The host will bring you in shortly.";
+		overlay.querySelector(".fpm-hold__fine").innerHTML = S.holdBody || "Your camera and microphone are connected. Nobody can see or hear you yet — you'll know the moment you're on.";
 		document.body.appendChild(overlay);
 	}
 
