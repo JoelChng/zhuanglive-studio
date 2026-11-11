@@ -18,7 +18,7 @@
 		room: "zhuanglive", // sanitized the same way VDO does ([\W]+ → _)
 		hostPushId: "ZHUANGHOST", // host page &push= value (fpm-scenes skips IDs starting with this if uppercase prefix pattern — see skipPrefix)
 		hostSkipPrefix: "ZHUANG", // stream IDs starting with this (case-sensitive match of leading chars) are treated as studio-side, not guests — autodrive skips them. Use same as hostPushId or "FPM" style prefix.
-		siteBase: "", // optional absolute origin+path for docs only, e.g. "https://you.github.io/studio". Runtime links stay relative.
+		siteBase: "https://joelchng.github.io/zhuanglive-studio/", // live Pages URL. Runtime links stay relative.
 		singleInviteAtRoot: true, // bare site root → branded join for `room`
 
 		/* —— Branding —— */

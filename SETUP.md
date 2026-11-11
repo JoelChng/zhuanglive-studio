@@ -22,7 +22,7 @@ Open `studio-config.js` and set at least:
 | `hostTagLabel` | `the庄live` | Label on host view iframes |
 | `brand.*` | neutral gold/teal | Colors when you have a brand kit |
 | `assets.*` | `media/studio-logo.svg`, etc. | Replace files or change paths |
-| `siteBase` | `""` | Optional `https://YOU.github.io/studio` for your notes |
+| `siteBase` | `https://joelchng.github.io/zhuanglive-studio/` | Live Pages URL |
 | `recordingConsentRequired` | `true` | Guest must tick “I understand…” before Join |
 | `obs.url` | `ws://127.0.0.1:4455` | Local OBS websocket |
 | `obs.password` | `""` | **Leave empty** — pass `&obspass=` on the host URL |
@@ -39,8 +39,8 @@ Guest-facing copy (`welcomeLede`, `holdLede`, `uploadFailSendHint`, consent text
 2. **Settings → Pages → Deploy from branch `main` / root** (or `/docs` if you prefer).
 3. Ensure `.nojekyll` is present (it is) so underscored paths work.
 4. After deploy, guest root is:
-   - `https://YOURUSER.github.io/REPONAME/` → redirects into branded `join.html` for room `zhuanglive`
-5. Set `siteBase` in config to that URL for your own reference.
+   - `https://joelchng.github.io/zhuanglive-studio/` → redirects into branded `join.html` for room `zhuanglive`
+5. `siteBase` in config is already set to that URL.
 
 Local preview:
 
@@ -56,27 +56,27 @@ HTTPS is required for camera/mic from other devices; GitHub Pages provides HTTPS
 
 ## 3. Links you will use every week
 
-Replace `BASE` with your Pages URL (no trailing path issues — keep the trailing slash).
+Live site: `https://joelchng.github.io/zhuanglive-studio/` (keep the trailing slash).
 
 **Guest invite (share this one link):**  
-`BASE/`  
-or explicitly `BASE/join.html?room=zhuanglive`  
+`https://joelchng.github.io/zhuanglive-studio/`  
+or explicitly `https://joelchng.github.io/zhuanglive-studio/join.html?room=zhuanglive`  
 Optional: `&hold` (waiting room), `&name=Guest_Name`, `&fpmrelay` (Meshcast for screen share).
 
 **Director (control room + Drive ISOs):**  
-`BASE/?director=zhuanglive&autodrive&autodrivebitrate=3000`  
+`https://joelchng.github.io/zhuanglive-studio/?director=zhuanglive&autodrive&autodrivebitrate=3000`  
 Sign in to Google Drive when prompted (“Connect Google Drive”).
 
 **Host page (OBS scene buttons + cast / share):**  
-`BASE/?push=ZHUANGHOST&room=zhuanglive&obspass=YOUR_OBS_PASSWORD&webcam&autostart&label=Host`  
+`https://joelchng.github.io/zhuanglive-studio/?push=ZHUANGHOST&room=zhuanglive&obspass=YOUR_OBS_PASSWORD&webcam&autostart&label=Host`  
 Optional: `&obsurl=ws://127.0.0.1:4455`, `&camsource=Camera`, `&stageinput=Stage`, `&scenes=Starting Soon,Onstage`.
 
 **OBS Browser Source — stage compositor:**  
-`BASE/stage.html?room=zhuanglive`  
+`https://joelchng.github.io/zhuanglive-studio/stage.html?room=zhuanglive`  
 (Host page stamps cast/build into the Stage input URL automatically when connected.)
 
 **Optional screen-share → scene bridge (legacy):**  
-`BASE/bridge.html?room=zhuanglive&watch=GUESTID1,GUESTID2&pass=YOUR_OBS_PASSWORD`  
+`https://joelchng.github.io/zhuanglive-studio/bridge.html?room=zhuanglive&watch=GUESTID1,GUESTID2&pass=YOUR_OBS_PASSWORD`  
 Defaults no longer hard-code guest IDs or OBS passwords.
 
 ---
