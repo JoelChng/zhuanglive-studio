@@ -12,6 +12,7 @@
 		hostName: "the host", // "Matt" → used in guest copy ("send that file to …")
 		hostHandle: "@thezhuanglive", // shown on stage overlays (𝕏)
 		youtubeHandle: "youtube.com/@thezhuanglive",
+		liveUrl: "https://x.com/i/broadcasts/2dKRJpzlBoegrp", // current X live broadcast link (update per episode)
 		hostTagLabel: "the庄live", // URL label= for host/view iframes (underscores → spaces in VDO)
 
 		/* —— Room / links —— */

@@ -19,6 +19,7 @@ Open `studio-config.js` and set at least:
 | `hostPushId` | `ZHUANGHOST` | Host camera push id (`&push=`) |
 | `hostSkipPrefix` | `ZHUANG` | Autodrive skips stream IDs with this prefix |
 | `hostHandle` / `youtubeHandle` | `@thezhuanglive` / `youtube.com/@thezhuanglive` | Overlay social lines |
+| `liveUrl` | `https://x.com/i/broadcasts/2dKRJpzlBoegrp` | Current X live broadcast link; update each episode |
 | `hostTagLabel` | `the庄live` | Label on host view iframes |
 | `brand.*` | neutral gold/teal | Colors when you have a brand kit |
 | `assets.*` | `media/studio-logo.svg`, etc. | Replace files or change paths |
